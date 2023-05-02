@@ -1,0 +1,53 @@
+$purple1: #4600c7;
+$purple2: #5900ff;
+$purple3: #7636ec;
+$dark1: rgb(31, 31, 31);
+$dark2: rgb(49, 49, 49);
+$dark3: rgb(63, 63, 63);
+$white1: rgb(223, 223, 223);
+$white2: rgb(197, 197, 197);
+$white3: rgb(201, 201, 201);
+
+// Custom.scss
+// Option B: Include parts of Bootstrap
+
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "/node_modules/bootstrap/scss/functions";
+
+// 2. Include any default variable overrides here
+$primary:       $purple1;
+// $secondary:     $gray-600 !default;
+// $success:       $green !default;
+// $info:          $cyan !default;
+// $warning:       $yellow !default;
+// $danger:        $red !default;
+// $light:         $gray-100 !default;
+// $dark:          $gray-900 !default;
+// $secondary: $purple3;
+$body-color: $white1;
+$body-bg: $dark1;
+$input-bg: $dark1;
+$form-check-input-indeterminate-bg-color: $dark1;
+$nav-tabs-link-active-color: $white1;
+$nav-link-color: $white2;
+$nav-link-hover-color: $white1;
+
+// 3. Include remainder of required Bootstrap stylesheets
+@import "/node_modules/bootstrap/scss/variables";
+@import "/node_modules/bootstrap/scss/variables-dark";
+@import "/node_modules/bootstrap/scss/maps";
+@import "/node_modules/bootstrap/scss/mixins";
+
+
+
+// 4. Include any optional Bootstrap components as you like
+@import "/node_modules/bootstrap/scss/root";
+@import "/node_modules/bootstrap/scss/reboot";
+@import "/node_modules/bootstrap/scss/type";
+@import "/node_modules/bootstrap/scss/images";
+@import "/node_modules/bootstrap/scss/containers";
+@import "/node_modules/bootstrap/scss/grid";
+
+// 5. Add additional custom code here
+
+@import "/node_modules/bootstrap/scss/bootstrap.scss";
