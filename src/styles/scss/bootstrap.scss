@@ -1,6 +1,7 @@
 $purple1: #4600c7;
 $purple2: #5900ff;
 $purple3: #7636ec;
+$blue1: #234464;
 $dark1: rgb(31, 31, 31);
 $dark2: rgb(49, 49, 49);
 $dark3: rgb(63, 63, 63);
@@ -24,6 +25,8 @@ $primary:       $purple1;
 // $light:         $gray-100 !default;
 // $dark:          $gray-900 !default;
 // $secondary: $purple3;
+$input-group-addon-bg: $blue1;
+$input-disabled-bg: $dark3; 
 $body-color: $white1;
 $body-bg: $dark1;
 $input-bg: $dark1;
@@ -31,6 +34,17 @@ $form-check-input-indeterminate-bg-color: $dark1;
 $nav-tabs-link-active-color: $white1;
 $nav-link-color: $white2;
 $nav-link-hover-color: $white1;
+$navbar-padding-y: 10px;
+
+$alert-padding-y:               5px;
+$alert-margin-bottom:           1rem;
+// $alert-border-radius:           $border-radius;
+// $alert-link-font-weight:        $font-weight-bold;
+// $alert-border-width:            $border-width;
+$alert-bg-scale:                -80%;
+$alert-border-scale:            -70%;
+$alert-color-scale:             40%;
+// $alert-dismissible-padding-r:   $alert-padding-x * 3;
 
 // 3. Include remainder of required Bootstrap stylesheets
 @import "/node_modules/bootstrap/scss/variables";

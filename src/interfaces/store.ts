@@ -1,21 +1,105 @@
+import { IMessageBody, IMessagesQueryResponse } from "./chatApi";
 
 export enum AuthStatus {
   'Auth',
   'NoAuth',
-  'Checking'
+  'Checking',
+  'LoggedOut',
+  'LoginIn',
 }
 
+export enum CreationStatus {
+  'Success',
+  'Failed',
+  'Creating',
+}
 export interface IAuthUser {
   username: string;
   email: string;
   id: string;
-} 
+}
+
+export interface ILoginBody {
+  email: string;
+  password: string;
+}
+
+export interface ICreateUserBody extends ILoginBody {
+  username: string;
+}
+
+export interface IUserCreateResponse {
+  ok: string,
+  user: {
+    email: string,
+    username: string,
+  }
+}
+
+export interface IUserLoginResponse {
+  status: string,
+  token: string,
+  user: IAuthUser,
+}
 
 export interface IAuthState {
   status: AuthStatus,
-  user: null | IAuthUser 
+  creationStatus: CreationStatus | null,
+  token: string  | null,
+  user: null | IAuthUser,
+  errors: {
+    creating: string | null,
+    signIn: string | null
+  } | null,
 }
 
 export interface IRootState {
   auth: IAuthState
+}
+
+export interface IContact {
+  email: string;
+  userId: string;
+  contactId: string;
+  username: string;
+  id: string;
+}
+
+export interface IGetContactsResponse {
+  contacts: IContact[],
+}
+
+export interface IAddContactResponse {
+  contact: IContact,
+}
+
+export interface ISendMessagePayload {
+  text: string;
+  sender: string;
+  receiver: string;
+  sentAt: Date;
+}
+
+export type IIncomingMessagePayload = ISendMessagePayload;
+
+export enum ChatTabs {
+  'MESSAGES',
+  'CONTACTS',
+  'PROFILE'
+}
+
+export enum ContactApiStates {
+  'FETCHING',
+  'NONE'
+}
+
+export interface IChatState {
+  selectedTab: ChatTabs;
+  selectedContact: IContact | null;
+  contacts: IContact[];
+  inputMessage: string;
+  socketConnected: boolean;
+  contactApiState: ContactApiStates;
+  messages: IMessagesQueryResponse[];
+  onlineMessages: IMessageBody[];
 }
