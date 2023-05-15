@@ -44,6 +44,20 @@ export const ChatControls = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [send]);
 
+  const handleButtonSend = () => {
+    if(chatState.inputMessage.length > 0) {
+      const message: ISendMessagePayload = {
+        receiver: chatState.selectedContact?.contactId ?? '',
+        sender: authState.user?.id ?? '',
+        sentAt: new Date(),
+        text: chatState.inputMessage
+      }
+
+      socketChatContext.sendMessage(message);
+      dispatch(setInputMessage(''))
+    }
+  }
+
   return (
     <div className={styles.messageControlsContainer}>
       <div className="input-group mb-3">
@@ -64,6 +78,7 @@ export const ChatControls = () => {
           type='button'
           style={{ borderStyle: 'solid', borderColor: 'rgb(223, 223, 223)' }}
           disabled={chatState.selectedContact === null}
+          onClick={handleButtonSend}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
