@@ -8,7 +8,7 @@ import {
 
 export const createUser = async (user: ICreateUserBody) => {
   const resp = await chatApi.post('/auth/create', user);
-  console.log(resp);
+  
   return resp.data as IUserCreateResponse;
 };
 

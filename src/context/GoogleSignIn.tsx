@@ -23,7 +23,7 @@ export const GoogleSignInProvider: React.FC<{
   };
 
   const handleScriptError = (e: any) => {
-    console.log(e);
+    
     setState((actual) => ({
       ...actual,
       scriptLoaded: false,

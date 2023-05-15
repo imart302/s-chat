@@ -16,7 +16,7 @@ export const startCreateUserNative = createAsyncThunk<
   ICreateUserBody
 >('auth/createNative', async (user) => {
   const resp = await createUser(user);
-  console.log(resp);
+  
   return resp;
 });
 

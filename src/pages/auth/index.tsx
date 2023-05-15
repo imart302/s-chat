@@ -84,7 +84,7 @@ const Auth: NextPageWithLayout = () => {
   };
 
   const onSubmit: SubmitHandler<ILoginInputs> = (data) => {
-    console.log(data);
+    
     const user: ILoginBody = {
       email: data.email,
       password: data.password,
