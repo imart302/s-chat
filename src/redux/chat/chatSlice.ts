@@ -43,7 +43,6 @@ export const chatSlice = createSlice({
     addIncomingMessage: (state, action: PayloadAction<IMessageBody>) => {
       state.onlineMessages.push(action.payload);
     },
-
   },
   extraReducers(builder) {
     builder.addCase(startSendMessageThunk.fulfilled, () => {});
@@ -60,7 +59,6 @@ export const chatSlice = createSlice({
       state.contactApiState = ContactApiStates.NONE;
     });
 
-
     builder.addCase(startFetchingMessages.fulfilled, (state, action) => {
       const paginatedMessages = action.payload;
       action.payload.messages = action.payload.messages.reverse();
@@ -76,6 +74,12 @@ export const chatSlice = createSlice({
       } else {
         state.messages.push(paginatedMessages);
       }
+      state.onlineMessages = state.onlineMessages.filter((message) => {
+        return (
+          message.sender !== paginatedMessages.contact &&
+          message.receiver !== paginatedMessages.contact
+        );
+      });
     });
   },
 });

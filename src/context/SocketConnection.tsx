@@ -1,11 +1,9 @@
-import { IMessageBody, IMessagePayload, ISendMessagePayload, SocketChat } from '@/interfaces';
+import { IMessageBody, ISendMessagePayload } from '@/interfaces';
 import {
   addIncomingMessage,
-  setInputMessage,
   setSocketConnection,
   startSendMessageThunk,
-  useAppDispatch,
-  useAppSelector,
+  useAppDispatch
 } from '@/redux';
 import { SocketManager } from '@/sockets/socket';
 import React, { createContext, useEffect } from 'react';
@@ -22,35 +20,8 @@ export const ChatSocketProvider: React.FC<{
   children: JSX.Element | JSX.Element[];
 }> = ({ children }) => {
   const dispatch = useAppDispatch();
-  const chatState = useAppSelector((state) => state.chat);
-  const authState = useAppSelector((state) => state.auth);
 
-  const sendMessage = () => {
-    
-    const socket = SocketManager.getInstance({
-      'x-token': localStorage.getItem('x-token') ?? '',
-    });
-
-    if (socket.connected) {
-      if (
-        authState.user &&
-        chatState.inputMessage.length > 0 &&
-        chatState.selectedContact
-      ) {
-        const message: ISendMessagePayload = {
-          receiver: chatState.selectedContact.contactId,
-          sender: authState.user?.id,
-          text: chatState.inputMessage,
-          sentAt: new Date(),
-        };
-
-        dispatch(startSendMessageThunk(message));
-        dispatch(setInputMessage(''));
-      }
-    }
-  };
-
-  const sendMessage2 = (message: ISendMessagePayload) => {
+  const sendMessage = (message: ISendMessagePayload) => {
     const socket = SocketManager.getInstance({});
     if (socket.connected) {
       dispatch(startSendMessageThunk(message));
@@ -95,7 +66,7 @@ export const ChatSocketProvider: React.FC<{
   return (
     <>
       <ChatSocketContext.Provider
-        value={{ sendMessage: sendMessage2 }}
+        value={{ sendMessage: sendMessage }}
       >
         {children}
       </ChatSocketContext.Provider>

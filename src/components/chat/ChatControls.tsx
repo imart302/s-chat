@@ -1,8 +1,8 @@
-import { setInputMessage, setStatusAction, useAppDispatch, useAppSelector } from '@/redux';
-import React, { useContext, useEffect, useState } from 'react';
-import styles from '@/styles/Chat.module.scss';
 import { ChatSocketContext } from '@/context/SocketConnection';
 import { ISendMessagePayload } from '@/interfaces';
+import { setInputMessage, useAppDispatch, useAppSelector } from '@/redux';
+import styles from '@/styles/Chat.module.scss';
+import { useContext, useEffect, useState } from 'react';
 
 export const ChatControls = () => {
   const dispatch = useAppDispatch();

@@ -17,14 +17,52 @@ export const MessagesView = () => {
 
   const completeMessages = [
     ...(messagesQuery?.messages ?? []),
-    ...chatState.onlineMessages.filter(
-      (message) => message.sender === chatState.selectedContact?.contactId || message.receiver === chatState.selectedContact?.contactId
-    ),
+    ...(messagesQuery?.pagination.prevPage === null
+      ? chatState.onlineMessages.filter(
+          (message) =>
+            message.sender === chatState.selectedContact?.contactId ||
+            message.receiver === chatState.selectedContact?.contactId
+        )
+      : []),
   ];
 
   const scrollToBottom = () => {
-    bottomContainerRef.current?.scrollIntoView({ behavior: 'auto' })
-  }
+    bottomContainerRef.current?.scrollIntoView({ behavior: 'auto' });
+  };
+
+  const handleLoadPastMessages = () => {
+    if (messagesQuery?.pagination.nextPage) {
+      dispatch(
+        startFetchingMessages({
+          contact: chatState.selectedContact?.contactId!,
+          page: messagesQuery.pagination.nextPage,
+          pageSize: PAGE_SIZE,
+        })
+      );
+    }
+  };
+
+  const handleLoadPresentMessages = () => {
+    if (messagesQuery?.pagination.prevPage !== null) {
+      dispatch(
+        startFetchingMessages({
+          contact: chatState.selectedContact?.contactId!,
+          page: messagesQuery?.pagination.prevPage!,
+          pageSize: PAGE_SIZE,
+        })
+      );
+    }
+  };
+
+  const handleLoadRecentMessages = () => {
+    dispatch(
+      startFetchingMessages({
+        contact: chatState.selectedContact?.contactId!,
+        page: 0,
+        pageSize: PAGE_SIZE,
+      })
+    );
+  };
 
   useEffect(() => {
     if (chatState.selectedContact) {
@@ -44,14 +82,13 @@ export const MessagesView = () => {
     }
 
     scrollToBottom();
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatState.selectedContact?.contactId]);
 
   useEffect(() => {
     scrollToBottom();
   }, [chatState.onlineMessages.length, messagesQuery?.messages.length]);
-
 
   return (
     <div
@@ -66,8 +103,9 @@ export const MessagesView = () => {
             <button
               className="btn btn-primary mb-2"
               style={{
-                display: messagesQuery?.pagination.nextPage ? 'block' : 'none',
+                display: messagesQuery?.pagination.nextPage !== null ? 'block' : 'none',
               }}
+              onClick={handleLoadPastMessages}
             >
               Load past
             </button>
@@ -86,14 +124,16 @@ export const MessagesView = () => {
             <button
               className="btn btn-primary mb-2"
               style={{
-                display: messagesQuery?.pagination.prevPage ? 'block' : 'none',
+                display: messagesQuery?.pagination.prevPage !== null ? 'block' : 'none',
               }}
+              onClick={handleLoadPresentMessages}
+              onDoubleClick={handleLoadRecentMessages}
             >
               Go to present
             </button>
           </>
         )}
-        <div ref={bottomContainerRef} id='bottomContainerRef'></div>
+        <div ref={bottomContainerRef} id="bottomContainerRef"></div>
       </div>
       <ChatControls />
     </div>
