@@ -84,13 +84,14 @@ const Auth: NextPageWithLayout = () => {
   };
 
   const onSubmit: SubmitHandler<ILoginInputs> = (data) => {
-    
-    const user: ILoginBody = {
-      email: data.email,
-      password: data.password,
-    };
+    if (authState.status !== AuthStatus.LoginIn) {
+      const user: ILoginBody = {
+        email: data.email,
+        password: data.password,
+      };
 
-    dispatch(startLoginNative(user));
+      dispatch(startLoginNative(user));
+    }
   };
 
   useEffect(() => {
@@ -163,6 +164,7 @@ const Auth: NextPageWithLayout = () => {
                 ref={buttonLoginRef}
                 type="submit"
                 className="btn btn-primary"
+                disabled={authState.status === AuthStatus.LoginIn}
               >
                 Login
               </button>

@@ -1,9 +1,10 @@
 import { GoogleSignInContext } from '@/context/GoogleSignIn';
-import { TokenResponse } from '@/interfaces';
+import { AuthStatus, TokenResponse } from '@/interfaces';
 import React, { useContext, useEffect, useState } from 'react';
 
 import styles from '@/styles/Auth.module.scss';
 import Image from 'next/image';
+import { useAppSelector } from '@/redux';
 
 export interface GoogleSignInButtonProps {
   onSignIn?: (response: TokenResponse) => void;
@@ -14,6 +15,7 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
   onSignIn,
   text,
 }) => {
+  const authState = useAppSelector((state) => state.auth);
   const [render, setRender] = useState<boolean>(false);
   const googleContext = useContext(GoogleSignInContext);
 
@@ -37,6 +39,7 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
     <button
       className={`${styles.googleSignInButton}`}
       onClick={handleGoogleLogin}
+      disabled={authState.status === AuthStatus.LoginIn}
     >
       <Image
         src={'/logo_google_g_icon.svg'}
