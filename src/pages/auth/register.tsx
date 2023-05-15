@@ -15,6 +15,7 @@ import { startCreateUserNative, startGoogleSignIn } from '@/redux/auth';
 import { emailRegex } from '@/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { NextPageWithLayout } from '../_app';
+import { useRouter } from 'next/router';
 
 interface IRegisterInputs {
   email: string;
@@ -34,6 +35,7 @@ const Register: NextPageWithLayout = () => {
   const dispatch = useAppDispatch();
   const creationStatus = useAppSelector((store) => store.auth.creationStatus);
   const creationError = useAppSelector((store) => store.auth.errors);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -131,6 +133,7 @@ const Register: NextPageWithLayout = () => {
           ...actual,
           displaySuccess: false,
         }));
+        router.push('/auth');
       }, 2000);
     }
     return () => {
@@ -138,6 +141,7 @@ const Register: NextPageWithLayout = () => {
         clearInterval(inter);
       }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [creationStatus]);
 
   useEffect(() => {

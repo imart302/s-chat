@@ -1,10 +1,8 @@
 import { GoogleSignInButton } from '@/components';
 import {
   AuthStatus,
-  CodeResponse,
-  GoogleCredentialResponse,
   ILoginBody,
-  TokenResponse,
+  TokenResponse
 } from '@/interfaces';
 import { AuthLayout } from '@/layouts';
 import { useAppDispatch, useAppSelector } from '@/redux';
@@ -14,7 +12,7 @@ import { emailRegex } from '@/utils';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { use, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { NextPageWithLayout } from '../_app';
 
