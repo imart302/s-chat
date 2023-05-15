@@ -36,7 +36,7 @@ export const AuthRouteGuard: React.FC<IAuthRouteGuardProps> = ({
     if (authState.status === AuthStatus.NoAuth && isChecking) {
       const xToken = localStorage.getItem('x-token');
       if (xToken && xToken.length > 0) {
-        dispatch(startRefreshToken(xToken));
+        dispatch(startRefreshToken());
         setIsChecking(false);
       } else {
         //Nothing to do, redirect
