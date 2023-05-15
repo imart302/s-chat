@@ -1,46 +1,54 @@
-import { GoogleSignInContext } from '@/context/GoogleSignIn'
-import { GoogleCredentialResponse } from '@/interfaces';
-import React, { useContext, useEffect, useRef } from 'react'
+import { GoogleSignInContext } from '@/context/GoogleSignIn';
+import { TokenResponse } from '@/interfaces';
+import React, { useContext, useEffect, useState } from 'react';
+
+import styles from '@/styles/Auth.module.scss';
+import Image from 'next/image';
 
 export interface GoogleSignInButtonProps {
-  onSingIn?: (credentials: GoogleCredentialResponse) => void;
-  calcWidth: number | null;
+  onSignIn?: (response: TokenResponse) => void;
+  text?: string;
 }
 
 export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
-  onSingIn,
-  calcWidth
+  onSignIn,
+  text,
 }) => {
-
-  const buttonRef = useRef<HTMLDivElement>(null);
+  const [render, setRender] = useState<boolean>(false);
   const googleContext = useContext(GoogleSignInContext);
-  
-  
-  useEffect(() => { 
-    if(!googleContext.scriptLoaded) return;
-    if(!buttonRef) return;
-    if(!calcWidth) return;
 
-    window.google?.accounts.id.initialize({
-      client_id: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENTID,
-      callback(credentialResponse: GoogleCredentialResponse) {
-          onSingIn?.(credentialResponse);
-      },
+  const handleGoogleLogin = () => {
+    const client = window.google?.accounts.oauth2.initTokenClient({
+      client_id: process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENTID ?? '',
+      scope: `openid profile email`,
+      callback: (response) => onSignIn?.(response),
     });
 
-    window.google?.accounts.id.renderButton(buttonRef.current!, {
-      type: 'standard',
-      shape: 'rectangular',
-      size: 'medium',
-      theme: 'outline',
-      locale: "en_US",
-      width: calcWidth.toString(),
-    })
+    client?.requestAccessToken();
+  };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [googleContext.scriptLoaded, buttonRef]);
+  useEffect(() => {
+    if (!googleContext.scriptLoaded) return;
+    setRender(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [googleContext.scriptLoaded]);
 
-  return (
-    <div ref={buttonRef} style={{height: 45}}></div>
-  )
-}
+  return render ? (
+    <button
+      className={`${styles.googleSignInButton}`}
+      onClick={handleGoogleLogin}
+    >
+      <Image
+        src={'/logo_google_g_icon.svg'}
+        alt={''}
+        style={{ marginRight: '10px' }}
+        width={25}
+        height={25}
+      />
+      {/* <img style={{height: '30px', marginRight: '24dp'}} src='/logo_google_g_icon.svg'></img> */}
+      {text ?? 'Continue with google'}
+    </button>
+  ) : (
+    <></>
+  );
+};

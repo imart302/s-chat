@@ -42,7 +42,8 @@ export const chatSlice = createSlice({
     },
     addIncomingMessage: (state, action: PayloadAction<IMessageBody>) => {
       state.onlineMessages.push(action.payload);
-    }
+    },
+
   },
   extraReducers(builder) {
     builder.addCase(startSendMessageThunk.fulfilled, () => {});

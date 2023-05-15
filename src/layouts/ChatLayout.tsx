@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/utils/LoadingSpinner';
 import { ChatTabs } from '@/interfaces';
 import {
   doLogout,
+  setSelectedContact,
   setSelectedTab,
   startGetContacts,
   useAppDispatch,
@@ -15,7 +16,7 @@ import {
 import { AuthRouteGuard } from '@/routes/AuthRouteGuard';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { SocketConnectionProvider } from '@/context/SocketConnection';
+import { ChatSocketProvider } from '@/context/SocketConnection';
 
 export interface IChatLayoutProps {
   children: JSX.Element | JSX.Element[];
@@ -73,9 +74,22 @@ export const ChatLayout: React.FC<IChatLayoutProps> = ({ children }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    const lastContact = localStorage.getItem('last-contact');
+
+    if(lastContact) {
+      const contact = chatState.contacts.find(contact => contact.contactId  === lastContact);
+      if( contact ){
+        dispatch(setSelectedContact(contact));
+      }
+    }
+    
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatState.contacts.length])
+
   return (
     <AuthRouteGuard redirect="/auth" loadingComponent={<LoadingSpinner />}>
-      <SocketConnectionProvider>
+      <ChatSocketProvider>
         <div className={styles.chatPageContainer}>
           <div className={styles.chatNavbar}>
             <div className={styles.chatToolbar}>
@@ -148,7 +162,7 @@ export const ChatLayout: React.FC<IChatLayoutProps> = ({ children }) => {
             {tabViewMap[chatState.selectedTab]}
           </main>
         </div>
-      </SocketConnectionProvider>
+      </ChatSocketProvider>
     </AuthRouteGuard>
   );
 };

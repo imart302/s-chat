@@ -1,12 +1,14 @@
 import { setInputMessage, setStatusAction, useAppDispatch, useAppSelector } from '@/redux';
 import React, { useContext, useEffect, useState } from 'react';
 import styles from '@/styles/Chat.module.scss';
-import { SocketConnectionContext } from '@/context/SocketConnection';
+import { ChatSocketContext } from '@/context/SocketConnection';
+import { ISendMessagePayload } from '@/interfaces';
 
 export const ChatControls = () => {
   const dispatch = useAppDispatch();
   const chatState = useAppSelector((state) => state.chat);
-  const socketChatContext = useContext(SocketConnectionContext);
+  const authState = useAppSelector((state) => state.auth);
+  const socketChatContext = useContext(ChatSocketContext);
   const [ send , setSend ] = useState<boolean>(false);
 
   const keyPressListener = (e: KeyboardEvent) => {
@@ -21,12 +23,21 @@ export const ChatControls = () => {
     return () => {
       window.removeEventListener('keyup', keyPressListener);
     };
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
-    if(send) {
-      socketChatContext.sendActualInput();
+    if(send && chatState.inputMessage.length > 0) {
+      const message: ISendMessagePayload = {
+        receiver: chatState.selectedContact?.contactId ?? '',
+        sender: authState.user?.id ?? '',
+        sentAt: new Date(),
+        text: chatState.inputMessage
+      }
+
+      socketChatContext.sendMessage(message);
+      dispatch(setInputMessage(''))
       setSend(false);
     }
     

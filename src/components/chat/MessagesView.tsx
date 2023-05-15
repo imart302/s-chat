@@ -44,8 +44,9 @@ export const MessagesView = () => {
     }
 
     scrollToBottom();
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [chatState.selectedContact?.contactId]);
 
   useEffect(() => {
     scrollToBottom();

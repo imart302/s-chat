@@ -1,4 +1,4 @@
-import { IMessageBody, ISendMessagePayload, SocketChat } from '@/interfaces';
+import { IMessageBody, IMessagePayload, ISendMessagePayload, SocketChat } from '@/interfaces';
 import {
   addIncomingMessage,
   setInputMessage,
@@ -11,14 +11,14 @@ import { SocketManager } from '@/sockets/socket';
 import React, { createContext, useEffect } from 'react';
 
 export interface ISocketConnectionContext {
-  sendActualInput: () => void;
+  sendMessage: (message: ISendMessagePayload) => void;
 }
 
-export const SocketConnectionContext = createContext<ISocketConnectionContext>({
-  sendActualInput: () => {},
+export const ChatSocketContext = createContext<ISocketConnectionContext>({
+  sendMessage: (message: ISendMessagePayload) => {},
 });
 
-export const SocketConnectionProvider: React.FC<{
+export const ChatSocketProvider: React.FC<{
   children: JSX.Element | JSX.Element[];
 }> = ({ children }) => {
   const dispatch = useAppDispatch();
@@ -47,6 +47,13 @@ export const SocketConnectionProvider: React.FC<{
         dispatch(startSendMessageThunk(message));
         dispatch(setInputMessage(''));
       }
+    }
+  };
+
+  const sendMessage2 = (message: ISendMessagePayload) => {
+    const socket = SocketManager.getInstance({});
+    if (socket.connected) {
+      dispatch(startSendMessageThunk(message));
     }
   };
 
@@ -87,11 +94,11 @@ export const SocketConnectionProvider: React.FC<{
 
   return (
     <>
-      <SocketConnectionContext.Provider
-        value={{ sendActualInput: sendMessage }}
+      <ChatSocketContext.Provider
+        value={{ sendMessage: sendMessage2 }}
       >
         {children}
-      </SocketConnectionContext.Provider>
+      </ChatSocketContext.Provider>
     </>
   );
 };

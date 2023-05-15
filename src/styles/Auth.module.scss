@@ -1,3 +1,7 @@
+@font-face {
+  font-family: 'roboto-medium';
+  src: url('/Roboto-Medium.ttf');
+}
 
 .authContainer {
   width: 300px;
@@ -8,4 +12,33 @@
   border-color: rgb(199, 199, 199);
   border-width: 1px;
   border-radius: 5px;
+}
+
+.googleSignInButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  border-width: 1px;
+  font-family: roboto-medium;
+  width: 100%;
+  padding: 6px 12px;
+  background-color: #ffff;
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 16px;
+}
+
+.googleSignInButton > img {
+  margin-right: auto;
+}
+
+.googleSignInButton:hover {
+  background-color: #dfdfdf;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.googleSignInButton:disabled {
+  background-color: #919191;
+  color: rgba(0, 0, 0, 0.54);
 }

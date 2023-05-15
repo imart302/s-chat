@@ -1,7 +1,7 @@
 import { AuthStatus, IAuthState } from "@/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 import { setLoggedUserCaseReducer, setStatusCaseReducer } from "./reducers";
-import { buildStartCreateUserNative, buildStartLoginNative, buildStartRefreshToken } from "./thunks";
+import { buildStartCreateUserNative, buildStartGoogleSingIn, buildStartLoginNative, buildStartRefreshToken } from "./thunks";
 
 
 const initialState: IAuthState = {
@@ -36,6 +36,7 @@ export const authSlice = createSlice({
     buildStartCreateUserNative(builder);
     buildStartLoginNative(builder);
     buildStartRefreshToken(builder);
+    buildStartGoogleSingIn(builder);
   }
 
 });

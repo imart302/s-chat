@@ -1,17 +1,17 @@
 import styles from '@/styles/Auth.module.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { GoogleSignInButton } from '@/components';
 import {
   CreationStatus,
-  GoogleCredentialResponse,
   ICreateUserBody,
+  TokenResponse
 } from '@/interfaces';
 import { AuthLayout } from '@/layouts';
 import { useAppDispatch, useAppSelector } from '@/redux';
-import { startCreateUserNative } from '@/redux/auth';
+import { startCreateUserNative, startGoogleSignIn } from '@/redux/auth';
 import { emailRegex } from '@/utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { NextPageWithLayout } from '../_app';
@@ -67,8 +67,9 @@ const Register: NextPageWithLayout = () => {
     dispatch(startCreateUserNative(user));
   };
 
-  //TODO: Sign in with google
-  const onSignInWithGoogle = (credentials: GoogleCredentialResponse) => {};
+  const onSignInWithGoogle = (credentialResponse: TokenResponse) => {
+    dispatch(startGoogleSignIn(credentialResponse.access_token))
+  };
 
   useEffect(() => {
     if (errors.username) {
@@ -250,13 +251,9 @@ const Register: NextPageWithLayout = () => {
               </button>
             </div>
           </form>
-
-          {state.calcButtonWidth && (
-            <GoogleSignInButton
-              onSingIn={onSignInWithGoogle}
-              calcWidth={state.calcButtonWidth}
-            />
-          )}
+          <div className="d-flex justify-content-center">
+            <GoogleSignInButton onSignIn={onSignInWithGoogle} text='Continue with google' />
+          </div>
 
           <div className="mt-5 d-flex justify-content-around">
             <small>Already have an account? </small>

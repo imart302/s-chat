@@ -1,13 +1,6 @@
 import { SocketChat } from '@/interfaces';
 import { io } from 'socket.io-client';
 
-// export const socket: SocketChat = io(process.env.NEXT_PUBLIC_SOCKET_URL ?? 'http:localhost:3000', {
-//   extraHeaders: {
-//     'x-token': localStorage.getItem('x-token') ?? '',
-//   },
-//   autoConnect: false,
-// });
-
 export class SocketManager {
   static socket: SocketChat | null = null;
 

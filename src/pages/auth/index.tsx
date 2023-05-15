@@ -1,8 +1,14 @@
 import { GoogleSignInButton } from '@/components';
-import { AuthStatus, GoogleCredentialResponse, ILoginBody } from '@/interfaces';
+import {
+  AuthStatus,
+  CodeResponse,
+  GoogleCredentialResponse,
+  ILoginBody,
+  TokenResponse,
+} from '@/interfaces';
 import { AuthLayout } from '@/layouts';
 import { useAppDispatch, useAppSelector } from '@/redux';
-import { startLoginNative } from '@/redux/auth';
+import { startGoogleSignIn, startLoginNative } from '@/redux/auth';
 import styles from '@/styles/Auth.module.scss';
 import { emailRegex } from '@/utils';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -73,8 +79,8 @@ const Auth: NextPageWithLayout = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errors.email, errors.password]);
 
-  const onSignInWithGoogle = (credentialResponse: GoogleCredentialResponse) => {
-    console.log(credentialResponse);
+  const onSignInWithGoogle = (credentialResponse: TokenResponse) => {
+    dispatch(startGoogleSignIn(credentialResponse.access_token))
   };
 
   const onSubmit: SubmitHandler<ILoginInputs> = (data) => {
@@ -164,12 +170,7 @@ const Auth: NextPageWithLayout = () => {
           </form>
 
           <div className="d-flex justify-content-center">
-            {state.calcButtonWidth && (
-              <GoogleSignInButton
-                onSingIn={onSignInWithGoogle}
-                calcWidth={state.calcButtonWidth}
-              />
-            )}
+            <GoogleSignInButton onSignIn={onSignInWithGoogle} text='Login with google' />
           </div>
 
           <div className="mt-5 d-flex justify-content-around">

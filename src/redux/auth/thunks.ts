@@ -1,4 +1,4 @@
-import { createUser, login, refreshToken } from '@/api';
+import { createUser, googleSingIn, login, refreshToken } from '@/api';
 import {
   AuthStatus,
   CreationStatus,
@@ -29,48 +29,46 @@ export const buildStartCreateUserNative = (
 
   builder.addCase(startCreateUserNative.fulfilled, (state) => {
     state.creationStatus = CreationStatus.Success;
-    if(state.errors) {
+    if (state.errors) {
       state.errors = {
         ...state.errors,
         creating: null,
-      }
+      };
     }
   });
 
   builder.addCase(startCreateUserNative.rejected, (state, action) => {
     state.creationStatus = CreationStatus.Failed;
-    if(state.errors) {
+    if (state.errors) {
       state.errors = {
         ...state.errors,
         creating: action.error.message ?? 'Unknown error',
-      }
+      };
     } else {
       state.errors = {
         creating: action.error.message ?? 'Unknown error',
         signIn: null,
-      }
+      };
     }
   });
 };
 
-export const startLoginNative = createAsyncThunk<IUserLoginResponse, ILoginBody>(
-  'auth/login',
-  async (user) => {
-    const resp = await login(user);
-    return resp;
-  }
-);
+export const startLoginNative = createAsyncThunk<
+  IUserLoginResponse,
+  ILoginBody
+>('auth/login', async (user) => {
+  const resp = await login(user);
+  return resp;
+});
 
 export const buildStartLoginNative = (
   builder: ActionReducerMapBuilder<IAuthState>
 ) => {
-
   builder.addCase(startLoginNative.pending, (state) => {
     state.status = AuthStatus.LoginIn;
   });
 
   builder.addCase(startLoginNative.fulfilled, (state, action) => {
-
     state.status = AuthStatus.Auth;
     state.user = action.payload.user;
     state.token = action.payload.token;
@@ -78,16 +76,16 @@ export const buildStartLoginNative = (
 
   builder.addCase(startLoginNative.rejected, (state, action) => {
     state.status = AuthStatus.NoAuth;
-    if(state.errors) {
+    if (state.errors) {
       state.errors = {
         ...state.errors,
         signIn: action.error.message ?? 'Unknown error',
-      }
+      };
     } else {
       state.errors = {
         creating: null,
         signIn: action.error.message ?? 'Unknown error',
-      }
+      };
     }
   });
 };
@@ -103,7 +101,6 @@ export const startRefreshToken = createAsyncThunk<IUserLoginResponse, void>(
 export const buildStartRefreshToken = (
   builder: ActionReducerMapBuilder<IAuthState>
 ) => {
-
   builder.addCase(startRefreshToken.pending, (state) => {
     state.status = AuthStatus.Checking;
   });
@@ -120,12 +117,13 @@ export const buildStartRefreshToken = (
   });
 };
 
-export const startGoogleSignIn = createAsyncThunk<
-  void,
-  GoogleCredentialResponse
->('auth/google', async (googleResponse) => {
-  console.log('Calling sing in with google');
-});
+export const startGoogleSignIn = createAsyncThunk<IUserLoginResponse, string>(
+  'auth/google',
+  async (googleToken) => {
+    const resp = await googleSingIn(googleToken);
+    return resp;
+  }
+);
 
 export const buildStartGoogleSingIn = (
   builder: ActionReducerMapBuilder<IAuthState>
@@ -134,10 +132,15 @@ export const buildStartGoogleSingIn = (
     state.status = AuthStatus.Checking;
   });
 
-  //TODO: Define the response user
-  builder.addCase(startGoogleSignIn.fulfilled, (state) => {
+  builder.addCase(startGoogleSignIn.fulfilled, (state, action) => {
     state.status = AuthStatus.Auth;
+    state.user = action.payload.user;
+    state.token = action.payload.token;
   });
 
-  builder.addCase(startGoogleSignIn.rejected, (state) => {});
+  builder.addCase(startGoogleSignIn.rejected, (state) => 
+  {
+    state.status = AuthStatus.NoAuth;
+    state.token = null;
+  });
 };

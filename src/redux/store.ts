@@ -18,12 +18,17 @@ const store = configureStore({
 
 store.subscribe(() => {
   const state = store.getState();
+
   if(state.auth.status === AuthStatus.Auth && state.auth.token){
     localStorage.setItem('x-token', state.auth.token);
   }
 
   if(state.auth.status === AuthStatus.LoggedOut){
     localStorage.removeItem('x-token');
+  }
+
+  if(localStorage.getItem('last-contact') !== null && state.chat.selectedContact?.contactId){
+    localStorage.setItem('last-contact', state.chat.selectedContact?.contactId);
   }
 
 });
