@@ -88,6 +88,11 @@ export enum ChatTabs {
   'PROFILE'
 }
 
+export enum BaseApiStates {
+  'FETCHING',
+  'NONE',
+}
+
 export enum ContactApiStates {
   'FETCHING',
   'NONE'
@@ -100,6 +105,8 @@ export interface IChatState {
   inputMessage: string;
   socketConnected: boolean;
   contactApiState: ContactApiStates;
-  messages: IMessagesQueryResponse[];
+  queryMessagesApiState: BaseApiStates;
+  queryMessages: IMessagesQueryResponse[];
   onlineMessages: IMessageBody[];
+  selectedQueryMessages: IMessagesQueryResponse | null;
 }
