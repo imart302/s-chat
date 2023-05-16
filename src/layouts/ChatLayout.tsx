@@ -7,6 +7,7 @@ import { LoadingSpinner } from '@/components/utils/LoadingSpinner';
 import { ChatTabs } from '@/interfaces';
 import {
   doLogout,
+  fullReset,
   setSelectedContact,
   setSelectedTab,
   startGetContacts,
@@ -65,6 +66,7 @@ export const ChatLayout: React.FC<IChatLayoutProps> = ({ children }) => {
   };
 
   const onLogout = () => {
+    dispatch(fullReset());
     dispatch(doLogout());
     router.push('/auth');
   };

@@ -50,6 +50,9 @@ export const chatSlice = createSlice({
     addIncomingMessage: (state, action: PayloadAction<IMessageBody>) => {
       state.onlineMessages.push(action.payload);
     },
+    fullReset: (state) => {
+      state = initialState;
+    }
   },
   extraReducers(builder) {
     builder.addCase(startSendMessageThunk.fulfilled, () => {});
@@ -111,4 +114,5 @@ export const {
   setSocketConnection,
   setSelectedContact,
   addIncomingMessage,
+  fullReset,
 } = chatSlice.actions;
