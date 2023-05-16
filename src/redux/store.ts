@@ -27,8 +27,16 @@ store.subscribe(() => {
     localStorage.removeItem('x-token');
   }
 
-  if(localStorage.getItem('last-contact') !== null && state.chat.selectedContact?.contactId){
-    localStorage.setItem('last-contact', state.chat.selectedContact?.contactId);
+  if(localStorage.getItem('last-contact') === null){
+    if(state.chat.selectedContact?.contactId){
+      localStorage.setItem('last-contact', state.chat.selectedContact?.contactId);
+    }
+  } else {
+    if(state.chat.selectedContact?.contactId){
+      if(localStorage.getItem('last-contact') !== state.chat.selectedContact?.contactId) {
+        localStorage.setItem('last-contact', state.chat.selectedContact?.contactId);
+      }
+    }
   }
 
 });

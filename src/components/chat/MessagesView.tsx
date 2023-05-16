@@ -5,19 +5,18 @@ import { Message } from './Message';
 import styles from '@/styles/Chat.module.scss';
 import { useEffect, useRef } from 'react';
 import { PAGE_SIZE } from '@/constants';
+import { BaseApiStates } from '@/interfaces';
 
 export const MessagesView = () => {
   const chatState = useAppSelector((state) => state.chat);
   const dispatch = useAppDispatch();
   const bottomContainerRef = useRef<HTMLDivElement>(null);
 
-  const messagesQuery = chatState.messages.find(
-    (messages) => messages.contact === chatState.selectedContact?.contactId
-  );
+  const selectedQueryMessages = chatState.selectedQueryMessages;
 
   const completeMessages = [
-    ...(messagesQuery?.messages ?? []),
-    ...(messagesQuery?.pagination.prevPage === null
+    ...(selectedQueryMessages?.messages ?? []),
+    ...(selectedQueryMessages?.pagination.prevPage === null
       ? chatState.onlineMessages.filter(
           (message) =>
             message.sender === chatState.selectedContact?.contactId ||
@@ -31,11 +30,14 @@ export const MessagesView = () => {
   };
 
   const handleLoadPastMessages = () => {
-    if (messagesQuery?.pagination.nextPage) {
+    if (
+      selectedQueryMessages?.pagination.nextPage !== null &&
+      selectedQueryMessages?.pagination.nextPage !== undefined
+    ) {
       dispatch(
         startFetchingMessages({
           contact: chatState.selectedContact?.contactId!,
-          page: messagesQuery.pagination.nextPage,
+          page: selectedQueryMessages.pagination.nextPage,
           pageSize: PAGE_SIZE,
         })
       );
@@ -43,11 +45,14 @@ export const MessagesView = () => {
   };
 
   const handleLoadPresentMessages = () => {
-    if (messagesQuery?.pagination.prevPage !== null) {
+    if (
+      selectedQueryMessages?.pagination.prevPage !== null &&
+      selectedQueryMessages?.pagination.prevPage !== undefined
+    ) {
       dispatch(
         startFetchingMessages({
           contact: chatState.selectedContact?.contactId!,
-          page: messagesQuery?.pagination.prevPage!,
+          page: selectedQueryMessages?.pagination.prevPage,
           pageSize: PAGE_SIZE,
         })
       );
@@ -66,7 +71,7 @@ export const MessagesView = () => {
 
   useEffect(() => {
     if (chatState.selectedContact) {
-      const findMessages = chatState.messages.find(
+      const findMessages = chatState.queryMessages.find(
         (messages) => messages.contact === chatState.selectedContact?.contactId
       );
 
@@ -88,7 +93,7 @@ export const MessagesView = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [chatState.onlineMessages.length, messagesQuery?.messages.length]);
+  }, [chatState.onlineMessages.length, selectedQueryMessages?.messages.length]);
 
   return (
     <div
@@ -103,7 +108,12 @@ export const MessagesView = () => {
             <button
               className="btn btn-primary mb-2"
               style={{
-                display: messagesQuery?.pagination.nextPage !== null ? 'block' : 'none',
+                display:
+                  selectedQueryMessages?.pagination.nextPage === null ||
+                  selectedQueryMessages?.pagination.nextPage === undefined ||
+                  chatState.queryMessagesApiState === BaseApiStates.FETCHING
+                    ? 'none'
+                    : 'block',
               }}
               onClick={handleLoadPastMessages}
             >
@@ -124,7 +134,12 @@ export const MessagesView = () => {
             <button
               className="btn btn-primary mb-2"
               style={{
-                display: messagesQuery?.pagination.prevPage !== null ? 'block' : 'none',
+                display:
+                  selectedQueryMessages?.pagination.prevPage === null ||
+                  selectedQueryMessages?.pagination.prevPage === undefined ||
+                  chatState.queryMessagesApiState === BaseApiStates.FETCHING
+                    ? 'none'
+                    : 'block',
               }}
               onClick={handleLoadPresentMessages}
               onDoubleClick={handleLoadRecentMessages}

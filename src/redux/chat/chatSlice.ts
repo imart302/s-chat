@@ -1,4 +1,5 @@
 import {
+  BaseApiStates,
   ChatTabs,
   ContactApiStates,
   IChatState,
@@ -20,8 +21,10 @@ const initialState: IChatState = {
   inputMessage: '',
   socketConnected: false,
   contactApiState: ContactApiStates.NONE,
-  messages: [], //messages obtained from the REST API
+  queryMessages: [], //messages obtained from the REST API
   onlineMessages: [], //messages obtained through sockets
+  selectedQueryMessages: null,
+  queryMessagesApiState: BaseApiStates.NONE,
 };
 
 export const chatSlice = createSlice({
@@ -39,6 +42,10 @@ export const chatSlice = createSlice({
     },
     setSelectedContact: (state, action: PayloadAction<IContact>) => {
       state.selectedContact = action.payload;
+      const queryMessages = state.queryMessages.find((qM) =>  qM.contact === action.payload.contactId);
+      if(queryMessages){
+        state.selectedQueryMessages = queryMessages;
+      }
     },
     addIncomingMessage: (state, action: PayloadAction<IMessageBody>) => {
       state.onlineMessages.push(action.payload);
@@ -58,21 +65,31 @@ export const chatSlice = createSlice({
       state.contacts = action.payload;
       state.contactApiState = ContactApiStates.NONE;
     });
+    builder.addCase(startGetContacts.rejected, (state) => {
+      state.contactApiState = ContactApiStates.NONE;
+    });
 
+    
+    builder.addCase(startFetchingMessages.pending, (state) => {
+      state.queryMessagesApiState = BaseApiStates.FETCHING;
+    });
     builder.addCase(startFetchingMessages.fulfilled, (state, action) => {
+      state.queryMessagesApiState = BaseApiStates.NONE;
       const paginatedMessages = action.payload;
       action.payload.messages = action.payload.messages.reverse();
-      const findMessages = state.messages.find(
+
+      state.selectedQueryMessages = action.payload;
+      const findMessages = state.queryMessages.find(
         (message) => message.contact === paginatedMessages.contact
       );
       if (findMessages) {
-        state.messages = state.messages.map((message) =>
+        state.queryMessages = state.queryMessages.map((message) =>
           message.contact === paginatedMessages.contact
             ? paginatedMessages
             : message
         );
       } else {
-        state.messages.push(paginatedMessages);
+        state.queryMessages.push(paginatedMessages);
       }
       state.onlineMessages = state.onlineMessages.filter((message) => {
         return (
@@ -80,6 +97,9 @@ export const chatSlice = createSlice({
           message.receiver !== paginatedMessages.contact
         );
       });
+    });
+    builder.addCase(startFetchingMessages.rejected, (state) => {
+      state.queryMessagesApiState = BaseApiStates.NONE;
     });
   },
 });
