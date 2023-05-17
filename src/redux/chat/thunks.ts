@@ -1,8 +1,8 @@
-import { IContact, IIncomingMessagePayload, IMessagesQueryParams, IMessagesQueryResponse, ISendMessagePayload } from '@/interfaces';
+import { IAuthUser, IContact, IIncomingMessagePayload, IMessagesQueryParams, IMessagesQueryResponse, ISendMessagePayload } from '@/interfaces';
 import { SocketManager } from '@/sockets/socket';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../types';
-import { addContact, getContacts } from '@/api';
+import { addContact, getContacts, updateImageProfile } from '@/api';
 import { queryMessages } from '@/api/messages';
 
 export const startSendMessageThunk = createAsyncThunk<

@@ -1,9 +1,16 @@
-import { createUser, googleSingIn, login, refreshToken } from '@/api';
+import {
+  createUser,
+  googleSingIn,
+  login,
+  refreshToken,
+  updateImageProfile,
+} from '@/api';
 import {
   AuthStatus,
   CreationStatus,
   GoogleCredentialResponse,
   IAuthState,
+  IAuthUser,
   ICreateUserBody,
   ILoginBody,
   IUserCreateResponse,
@@ -16,7 +23,7 @@ export const startCreateUserNative = createAsyncThunk<
   ICreateUserBody
 >('auth/createNative', async (user) => {
   const resp = await createUser(user);
-  
+
   return resp;
 });
 
@@ -138,9 +145,16 @@ export const buildStartGoogleSingIn = (
     state.token = action.payload.token;
   });
 
-  builder.addCase(startGoogleSignIn.rejected, (state) => 
-  {
+  builder.addCase(startGoogleSignIn.rejected, (state) => {
     state.status = AuthStatus.NoAuth;
     state.token = null;
   });
 };
+
+export const startUpdateProfilePicture = createAsyncThunk<IAuthUser, File>(
+  'chat/updateProfilePicture',
+  async (file) => {
+    const response = await updateImageProfile(file);
+    return response;
+  }
+);

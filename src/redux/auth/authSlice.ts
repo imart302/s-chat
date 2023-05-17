@@ -1,7 +1,7 @@
-import { AuthStatus, IAuthState } from "@/interfaces";
+import { AuthStatus, BaseApiStates, IAuthState } from "@/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 import { setLoggedUserCaseReducer, setStatusCaseReducer } from "./reducers";
-import { buildStartCreateUserNative, buildStartGoogleSingIn, buildStartLoginNative, buildStartRefreshToken } from "./thunks";
+import { buildStartCreateUserNative, buildStartGoogleSingIn, buildStartLoginNative, buildStartRefreshToken, startUpdateProfilePicture } from "./thunks";
 
 
 const initialState: IAuthState = {
@@ -10,6 +10,7 @@ const initialState: IAuthState = {
   creationStatus: null,
   errors: null,
   token: null,
+  updatePictureApiState: BaseApiStates.NONE,
 }
 
 export const authSlice = createSlice({
@@ -37,6 +38,15 @@ export const authSlice = createSlice({
     buildStartLoginNative(builder);
     buildStartRefreshToken(builder);
     buildStartGoogleSingIn(builder);
+
+    builder.addCase(startUpdateProfilePicture.pending, (state) => {
+      state.updatePictureApiState = BaseApiStates.FETCHING;
+    });
+
+    builder.addCase(startUpdateProfilePicture.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.updatePictureApiState = BaseApiStates.NONE;
+    });
   }
 
 });

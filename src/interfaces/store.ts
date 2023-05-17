@@ -13,10 +13,16 @@ export enum CreationStatus {
   'Failed',
   'Creating',
 }
+
+export enum BaseApiStates {
+  'FETCHING',
+  'NONE',
+}
 export interface IAuthUser {
   username: string;
   email: string;
   id: string;
+  img?: string;
 }
 
 export interface ILoginBody {
@@ -51,6 +57,7 @@ export interface IAuthState {
     creating: string | null,
     signIn: string | null
   } | null,
+  updatePictureApiState: BaseApiStates;
 }
 
 export interface IRootState {
@@ -88,10 +95,7 @@ export enum ChatTabs {
   'PROFILE'
 }
 
-export enum BaseApiStates {
-  'FETCHING',
-  'NONE',
-}
+
 
 export enum ContactApiStates {
   'FETCHING',
