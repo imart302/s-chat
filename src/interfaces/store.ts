@@ -70,6 +70,7 @@ export interface IContact {
   contactId: string;
   username: string;
   id: string;
+  img? : string;
 }
 
 export interface IGetContactsResponse {
@@ -94,8 +95,6 @@ export enum ChatTabs {
   'CONTACTS',
   'PROFILE'
 }
-
-
 
 export enum ContactApiStates {
   'FETCHING',

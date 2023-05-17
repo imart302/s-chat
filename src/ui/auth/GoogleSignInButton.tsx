@@ -39,7 +39,7 @@ export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({
     <button
       className={`${styles.googleSignInButton}`}
       onClick={handleGoogleLogin}
-      disabled={authState.status === AuthStatus.LoginIn}
+      disabled={authState.status === AuthStatus.LoginIn || authState.status === AuthStatus.Checking}
     >
       <Image
         src={'/logo_google_g_icon.svg'}

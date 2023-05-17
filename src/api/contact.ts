@@ -1,4 +1,4 @@
-import { IAddContactResponse, IGetContactsResponse } from "@/interfaces";
+import { IAddContactResponse, IContact, IGetContactsResponse } from "@/interfaces";
 import { chatApi } from "./chatApi";
 
 export const addContact = async (email: string) => {
@@ -19,4 +19,13 @@ export const getContacts = async () => {
   const data = response.data as IGetContactsResponse;
   
   return data;
+}
+
+export const deleteContact = async (contact: IContact) => {
+
+  const response = await chatApi.delete(`/contact/${contact.id}`);
+
+  const deleted = response.data.deleted as number;
+
+  return deleted;
 }

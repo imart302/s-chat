@@ -9,6 +9,7 @@ import {
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import {
   startAddContact,
+  startDeleteContacts,
   startFetchingMessages,
   startGetContacts,
   startSendMessageThunk,
@@ -42,8 +43,10 @@ export const chatSlice = createSlice({
     },
     setSelectedContact: (state, action: PayloadAction<IContact>) => {
       state.selectedContact = action.payload;
-      const queryMessages = state.queryMessages.find((qM) =>  qM.contact === action.payload.contactId);
-      if(queryMessages){
+      const queryMessages = state.queryMessages.find(
+        (qM) => qM.contact === action.payload.contactId
+      );
+      if (queryMessages) {
         state.selectedQueryMessages = queryMessages;
       }
     },
@@ -52,15 +55,18 @@ export const chatSlice = createSlice({
     },
     fullReset: (state) => {
       state = initialState;
-    }
+    },
   },
   extraReducers(builder) {
+    //SEND MESSAGE
     builder.addCase(startSendMessageThunk.fulfilled, () => {});
 
+    //ADD CONTACT
     builder.addCase(startAddContact.fulfilled, (state, action) => {
       state.contacts = [...state.contacts, action.payload];
     });
 
+    //GET CONTACTS
     builder.addCase(startGetContacts.pending, (state) => {
       state.contactApiState = ContactApiStates.FETCHING;
     });
@@ -72,7 +78,7 @@ export const chatSlice = createSlice({
       state.contactApiState = ContactApiStates.NONE;
     });
 
-    
+    //GET MESSAGES
     builder.addCase(startFetchingMessages.pending, (state) => {
       state.queryMessagesApiState = BaseApiStates.FETCHING;
     });
@@ -103,6 +109,14 @@ export const chatSlice = createSlice({
     });
     builder.addCase(startFetchingMessages.rejected, (state) => {
       state.queryMessagesApiState = BaseApiStates.NONE;
+    });
+
+
+    //DELETE CONTACT
+    builder.addCase(startDeleteContacts.fulfilled, (state, action) => {
+      state.contacts = state.contacts.filter(
+        (contact) => contact.contactId !== action.payload.contactId
+      );
     });
   },
 });
