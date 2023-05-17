@@ -1,4 +1,4 @@
-import { LoadingSpinner } from '@/components/utils/LoadingSpinner'
+import { LoadingSpinner } from '@/ui/utils/LoadingSpinner'
 import { GoogleSignInProvider } from '@/context/GoogleSignIn'
 import { PublicRouteGuard } from '@/routes/PublicRouteGuard'
 import React from 'react'

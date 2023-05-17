@@ -1,4 +1,4 @@
-import { GoogleSignInButton } from '@/components';
+import { GoogleSignInButton } from '@/ui';
 import {
   AuthStatus,
   ILoginBody,

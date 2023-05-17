@@ -1,6 +1,6 @@
 import { startFetchingMessages, useAppDispatch, useAppSelector } from '@/redux';
-import { ChatControls } from './ChatControls';
-import { Message } from './Message';
+import { ChatControls } from './components/ChatControls';
+import { Message } from './components/Message';
 
 import styles from '@/styles/Chat.module.scss';
 import { useEffect, useRef } from 'react';

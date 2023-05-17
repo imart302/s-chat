@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
-import { GoogleSignInButton } from '@/components';
+import { GoogleSignInButton } from '@/ui';
 import {
   CreationStatus,
   ICreateUserBody,

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Contact } from './Contact';
+import { Contact } from './components/Contact';
 
 import styles from '@/styles/Chat.module.scss';
-import { AddContactControls } from './AddContactControls';
+import { AddContactControls } from './components/AddContactControls';
 import { startGetContacts, useAppDispatch, useAppSelector } from '@/redux';
 import { ContactApiStates } from '@/interfaces';
 
