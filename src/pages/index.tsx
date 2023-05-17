@@ -1,11 +1,7 @@
 
-import { Inter } from 'next/font/google';
 import type { NextPageWithLayout } from './_app';
 import { ChatLayout } from '@/layouts';
 
-
-
-const inter = Inter({ subsets: ['latin'] });
 
 const Home: NextPageWithLayout = () => {
   return (
